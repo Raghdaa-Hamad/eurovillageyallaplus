@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EuroVillage — Restaurant &amp; Café</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#171310;
+    --cream:#f7f2ea;
+    --cream-2:#eee5d8;
+    --gold:#c9a25e;
+    --gold-soft:#d9bd8c;
+    --coffee:#8a5a3f;
+    --line: rgba(255,255,255,0.16);
+    --shadow: 0 20px 50px -20px rgba(23,19,16,0.35);
+    --menu-restaurant:#d9d5d2;
+    --menu-cafe:#eee8df;
+    --menu-restaurant-ink:#312d2a;
+    --menu-cafe-ink:#6b4a3b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Jost', sans-serif;
+    color:var(--ink);
+    background:repeating-linear-gradient(90deg, #ffffff 0px, #ffffff 48px, #fbfbfb 48px, #fbfbfb 96px);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 clamp(1.25rem, 4vw, 3rem);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:620px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:var(--ink);
+    padding: 4.5rem 1.5rem 7rem;
+    isolation:isolate;
+    overflow:hidden;
+  }
+  .hero-bg-flip{
+    position:absolute; inset:0;
+    z-index:0;
+    perspective:1900px;
+  }
+  .hero-bg-slide{
+    position:absolute; inset:0;
+    background-size:cover;
+    background-position:center;
+    transform:rotateY(94deg) scale(1.03);
+    opacity:0;
+    z-index:1;
+    transition:transform 1.15s cubic-bezier(.22,.85,.28,1), opacity .7s ease;
+    backface-visibility:hidden;
+  }
+  .hero-bg-slide.is-active{
+    transform:rotateY(0deg) scale(1);
+    opacity:1;
+    z-index:2;
+  }
+  .hero-dim{
+    position:absolute; inset:0;
+    z-index:1;
+    background:linear-gradient(180deg, rgba(10,8,6,0.62), rgba(10,8,6,0.82));
+    pointer-events:none;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 50% 35%, rgba(201,162,94,0.10), transparent 60%);
+    z-index:1;
+    pointer-events:none;
+  }
+  .hero-content{
+    position:relative; z-index:2;
+    display:flex; flex-direction:column; align-items:center;
+    animation: rise 1s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes rise{
+    from{opacity:0; transform:translateY(22px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .mark{
+    width:clamp(220px, 45vw, 460px); height:auto;
+    filter:invert(1) brightness(1.18) saturate(0.6);
+    opacity:0.95;
+  }
+
+  /* ---------- Floating info cards ---------- */
+  .info-row{
+    position:relative;
+    z-index:5;
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 clamp(1.25rem, 4vw, 2rem);
+    margin-top:-70px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1.4rem;
+  }
+  .info-card{
+    background:#fff;
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:1.5rem 1.6rem;
+    display:flex;
+    align-items:center;
+    gap:1.1rem;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .info-card:hover{transform:translateY(-6px); box-shadow:0 28px 60px -18px rgba(23,19,16,0.4);}
+  .info-icon{
+    flex:0 0 auto;
+    width:46px; height:46px;
+    border-radius:50%;
+    background:var(--cream-2);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--coffee);
+  }
+  .info-icon svg{width:21px; height:21px;}
+  .info-text .title{font-weight:600; font-size:1.02rem; color:var(--ink);}
+  .info-text .sub{font-size:0.83rem; color:#8b8478; margin-top:2px;}
+  .info-card.clickable{cursor:pointer;}
+
+  /* ---------- Menu section ---------- */
+  .menu-section{
+    padding:6.5rem 0 5.5rem;
+    position:relative;
+  }
+  .menu-layout{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:clamp(1.5rem, 4vw, 3.5rem);
+    align-items:stretch;
+  }
+  .side-caption{
+    display:flex;
+    align-items:flex-end;
+  }
+  .side-caption span{
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    font-family:'Marcellus', serif;
+    font-size:clamp(1.4rem, 2.6vw, 2rem);
+    letter-spacing:0.02em;
+    color:var(--ink);
+    line-height:1.15;
+  }
+  .side-caption em{
+    font-style:normal;
+    color:var(--coffee);
+  }
+  .menu-cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:1.6rem;
+  }
+  .menu-card{
+    min-height:330px;
+    border-radius:16px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+    box-shadow:0 1px 0 rgba(0,0,0,0.02);
+  }
+  .menu-card:hover{transform:translateY(-8px); box-shadow:0 30px 60px -24px rgba(23,19,16,0.28);}
+  .menu-card.food{
+    background:var(--menu-restaurant);
+    color:var(--menu-restaurant-ink);
+  }
+  .menu-card.cafe{
+    background:var(--menu-cafe);
+    color:var(--menu-cafe-ink);
+  }
+  .menu-card-header{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:1rem;
+    padding-top:3.25rem;
+  }
+  .menu-card-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:112px;
+    height:112px;
+  }
+  .menu-card-icon img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+  }
+  .menu-card-icon.icon-coffee{
+    width:118px;
+    height:118px;
+  }
+  .menu-card-title{
+    font-size:0.94rem;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:currentColor;
+  }
+  .menu-logo-wrap{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:1;
+    padding:1.7rem 2.25rem 3.2rem;
+  }
+  .menu-logo-wrap img{
+    width:100%;
+    height:auto;
+    display:block;
+  }
+  .menu-card.food .menu-logo-wrap img{
+    width:58%;
+    filter:brightness(0) saturate(100%) invert(29%) sepia(4%) saturate(417%) hue-rotate(349deg) brightness(89%) contrast(87%);
+    opacity:0.88;
+  }
+  .menu-card.cafe .menu-logo-wrap img{
+    width:70%;
+    filter:brightness(0) saturate(100%) invert(30%) sepia(17%) saturate(875%) hue-rotate(337deg) brightness(91%) contrast(87%);
+    opacity:0.92;
+  }
+
+  footer{
+    background:var(--ink);
+    color:#cfc6b6;
+    padding:2.8rem 0 2.2rem;
+    text-align:center;
+    font-size:0.82rem;
+    letter-spacing:0.04em;
+  }
+  .footer-logo{
+    height:40px;
+    width:auto;
+    margin:0 auto 1.1rem;
+    filter:invert(1) brightness(1.15) saturate(0.6);
+    opacity:0.92;
+  }
+  footer strong{color:var(--gold-soft); font-family:'Marcellus', serif; letter-spacing:0.1em;}
+  .footer-social{
+    display:flex;
+    justify-content:center;
+    gap:0.9rem;
+    margin-bottom:1.4rem;
+  }
+  .footer-social a{
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--gold-soft);
+    transition:background .25s ease, color .25s ease, transform .25s ease, border-color .25s ease;
+  }
+  .footer-social a:hover{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--ink);
+    transform:translateY(-3px);
+  }
+  .footer-social svg{width:17px; height:17px;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px){
+    .info-row{grid-template-columns:1fr; margin-top:-50px; gap:1rem;}
+    .menu-layout{grid-template-columns:1fr;}
+    .side-caption{align-items:flex-start;}
+    .side-caption span{writing-mode:horizontal-tb; transform:none; display:block;}
+    .hero{min-height:560px; padding-bottom:6rem;}
+  }
+  @media (max-width: 720px){
+    .menu-cards{grid-template-columns:1fr;}
+    .menu-card-icon{width:124px; height:124px;}
+    .menu-card-icon.icon-coffee{width:132px; height:132px;}
+    .menu-card.food .menu-logo-wrap img{width:68%;}
+    .menu-card.cafe .menu-logo-wrap img{width:82%;}
+  }
+  @media (max-width: 480px){
+    .info-card{padding:1.2rem 1.1rem; gap:0.85rem;}
+    .info-icon{width:40px; height:40px;}
+    .info-text .title{font-size:0.92rem;}
+    .brand-name{letter-spacing:0.08em;}
+    .menu-section{padding:4.5rem 0 3.5rem;}
+  }
+</style>
+</head>
+<body>
+
+  <section class="hero" id="home">
+    <div class="hero-bg-flip" id="heroFlip">
+      <div class="hero-bg-slide is-active" style="background-image:url('images/food-grilled-chicken.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image:url('images/cafe-latte-art.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image:url('images/food-schnitzel-mushroom.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image:url('images/cafe-espresso-dark.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image:url('images/food-schnitzel-veg.jpg')"></div>
+      <div class="hero-bg-slide" style="background-image:url('images/cafe-espresso-white.jpg')"></div>
+    </div>
+    <div class="hero-dim"></div>
+    <div class="hero-content">
+      <img src="images/logo-mark.png" alt="EuroVillage Restaurant &amp; Café" class="mark">
+    </div>
+  </section>
+
+  <div class="info-row">
+    <div class="info-card">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+      </div>
+      <div class="info-text">
+        <div class="title">08:00 am – 10:00 pm</div>
+        <div class="sub">Working hours</div>
+      </div>
+    </div>
+
+    <a class="info-card clickable" id="directionsLink" href="#" target="_blank" rel="noopener">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.2 7-12.5A7 7 0 0 0 5 9.5C5 14.8 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+      </div>
+      <div class="info-text">
+        <div class="title">Khobar, Qurtuba</div>
+        <div class="sub">Get directions</div>
+      </div>
+    </a>
+
+    <a class="info-card clickable" id="phoneLink" href="tel:+966138579780">
+      <div class="info-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5c0 8.5 6.5 15 15 15l3-3.6a1.6 1.6 0 0 0-.6-2.6l-3.7-1.5a1.6 1.6 0 0 0-1.7.4l-1.2 1.3a12.6 12.6 0 0 1-5.8-5.8l1.3-1.2a1.6 1.6 0 0 0 .4-1.7L9.2 2.6A1.6 1.6 0 0 0 6.6 2L4 5z"/></svg>
+      </div>
+      <div class="info-text">
+        <div class="title">+966 13 857 9780</div>
+        <div class="sub">Call online</div>
+      </div>
+    </a>
+  </div>
+
+  <section class="menu-section" id="menu">
+    <div class="wrap">
+      <div class="menu-layout">
+        <div class="side-caption">
+          <span>Enjoy your<br><em>Delicious</em> food</span>
+        </div>
+
+        <div class="menu-cards">
+          <a class="menu-card food" data-menu="restaurant" href="https://eurovillage.yallaqrcodes.com/branch/1/" target="_blank" rel="noopener">
+            <div class="menu-card-header">
+              <span class="menu-card-icon icon-dinner" aria-hidden="true">
+                <img src="dinner.png" alt="">
+              </span>
+              <div class="menu-card-title">Restaurant Menu</div>
+            </div>
+            <div class="menu-logo-wrap">
+              <img src="images/logo-mark.png" alt="EuroVillage Restaurant">
+            </div>
+          </a>
+
+          <a class="menu-card cafe" data-menu="cafe" href="https://desert-caffe.yallaqrcodes.com/branch/1/" target="_blank" rel="noopener">
+            <div class="menu-card-header">
+              <span class="menu-card-icon icon-coffee" aria-hidden="true">
+                <img src="coffee.png" alt="">
+              </span>
+              <div class="menu-card-title">Cafe Menu</div>
+            </div>
+            <div class="menu-logo-wrap">
+              <img src="images/51651c5db32890ef4bfc27652ab0b77b01ed801ce03f5d2fbe23cc85442d0284.png" alt="The Desert Café">
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="wrap">
+      <img src="images/logo-mark.png" alt="" class="footer-logo">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/eurovillage_compound" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://www.facebook.com/EuroVillageSA" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.675 0h-21.35C.594 0 0 .594 0 1.326v21.348C0 23.406.594 24 1.326 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24h-1.918c-1.504 0-1.795.716-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.406 24 22.674V1.326C24 .594 23.406 0 22.675 0z"/></svg>
+        </a>
+      </div>
+      <strong>EUROVILLAGE</strong> · Khobar, Qurtuba · +966 13 857 9780
+      <div style="margin-top:0.5rem; opacity:0.75; font-size:0.76rem;">Restaurant ext. 1751 &nbsp;·&nbsp; Desert Café ext. 1214</div>
+    </div>
+  </footer>
+
+<script>
+  // Google Maps directions link for the address shown
+  document.getElementById('directionsLink').href =
+    'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Eurovillage Khobar Qurtuba');
+
+  // ---------- Hero background flip ----------
+  (function(){
+    const slides = Array.from(document.querySelectorAll('#heroFlip .hero-bg-slide'));
+    if(!slides.length) return;
+    let current = 0;
+    setInterval(() => {
+      const next = (current + 1) % slides.length;
+      slides[current].classList.remove('is-active');
+      slides[next].classList.add('is-active');
+      current = next;
+    }, 5000);
+  })();
+</script>
+</body>
+</html>
